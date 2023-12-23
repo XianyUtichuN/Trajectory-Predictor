@@ -2,44 +2,39 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(TrajectoryPredictor))]
-public class ProjectileThrow : MonoBehaviour
-{
-    TrajectoryPredictor trajectoryPredictor;
+public class ProjectileThrow : MonoBehaviour {
 
-    [SerializeField]
-    Rigidbody objectToThrow;
+    //  ----------引用----------
+    private TrajectoryPredictor trajectoryPredictor;            //  抛物线预测
 
-    [SerializeField, Range(0.0f, 50.0f)]
-    float force;
-
-    [SerializeField]
-    Transform StartPosition;
+    [SerializeField] private Rigidbody objectToThrow;           //  投出去的物体  一般为刚体
+    [SerializeField, Range(0.0f, 50.0f)] private float force;   //  投出去的力量
+    [SerializeField] private Transform StartPosition;           //  投出去的位置
 
     public InputAction fire;
 
-    void OnEnable()
-    {
+    private void OnEnable() {
+        //  获取 trajectoryPredictor 组件
         trajectoryPredictor = GetComponent<TrajectoryPredictor>();
 
+        //  如果没有特定的开始投掷位置 则寻找当前位置
         if (StartPosition == null)
             StartPosition = transform;
 
+        //  鼠标左键发射
         fire.Enable();
         fire.performed += ThrowObject;
     }
 
-    void Update()
-    {
+    private void Update() {
         Predict();
     }
 
-    void Predict()
-    {
+    private void Predict() {
         trajectoryPredictor.PredictTrajectory(ProjectileData());
     }
 
-    ProjectileProperties ProjectileData()
-    {
+    private ProjectileProperties ProjectileData() {
         ProjectileProperties properties = new ProjectileProperties();
         Rigidbody r = objectToThrow.GetComponent<Rigidbody>();
 
@@ -52,8 +47,7 @@ public class ProjectileThrow : MonoBehaviour
         return properties;
     }
 
-    void ThrowObject(InputAction.CallbackContext ctx)
-    {
+    private void ThrowObject(InputAction.CallbackContext ctx) {
         Rigidbody thrownObject = Instantiate(objectToThrow, StartPosition.position, Quaternion.identity);
         thrownObject.AddForce(StartPosition.forward * force, ForceMode.Impulse);
     }
