@@ -1,3 +1,7 @@
+更新了部分的中文说明
+
+原作者的简介：
+
 # Trajectory-Predictor
 
 ![alt text](https://github.com/ForlornU/Images/blob/main/Thumbnail.png)
